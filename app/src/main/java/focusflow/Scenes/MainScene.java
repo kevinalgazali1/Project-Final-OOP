@@ -43,49 +43,51 @@ public class MainScene extends Main {
     private TableView<Tugas> tableView;
     private ObservableList<Tugas> tugas;
 
-
     public MainScene(Stage primaryStage, String userName) {
         super(primaryStage, userName);
         this.path = "sounds/a.mp3";
         this.media = new Media(new File(path).toURI().toString());
-        this.mp= new MediaPlayer(media);
-
+        this.mp = new MediaPlayer(media);
     }
 
-        public void show(){
-
+    public void show() {
         VBox root = new VBox();
         Scene scene = new Scene(root, 640, 480);
         scene.getStylesheets().add(getClass().getResource("/CSS/MainStyle.css").toExternalForm());
-        
+
         scene.getRoot().setStyle("-fx-background-color: #c0c0c0;");
 
         HBox topBox = generateTopBox();
 
-        TableView<Tugas> tableView = generateTableView();
+        tableView = generateTableView();
         tableView.setStyle("-fx-font-size: 14px;");
-        
 
         TextField input1 = new TextField();
         input1.setPromptText("Nama Tugas");
         TextField input2 = new TextField();
-        input2.setPromptText("Timer");
+        input2.setPromptText("Timer (H.M.S)");
         HBox hbox = new HBox(input1, input2);
         hbox.setSpacing(10);
         hbox.setAlignment(Pos.CENTER);
-        
-        
+
         Button btnAdd = new Button("Tambah");
         btnAdd.getStyleClass().add("cool-button");
         btnAdd.setOnAction(v -> {
-            Tugas newTugas = new Tugas(input1.getText(), Integer.parseInt(input2.getText()));
-            tableView.getItems().add(newTugas);
-            startTimer(newTugas);
+            String namaTugas = input1.getText();
+            String timerString = input2.getText();
+            int timer = parseTimerString(timerString);
+            if (timer >= 0) {
+                Tugas newTugas = new Tugas(namaTugas, timer, timerString);
+                tableView.getItems().add(newTugas);
+                startTimer(newTugas);
 
-            input1.clear();
-            input2.clear();
+                input1.clear();
+                input2.clear();
 
-            taskQueue.add(newTugas);
+                taskQueue.add(newTugas);
+            } else {
+                showAlert("Format waktu tidak valid! Harap masukkan waktu dengan format HH:MM:SS");
+            }
         });
 
         Region spacer = new Region();
@@ -94,18 +96,17 @@ public class MainScene extends Main {
         Button btnDel = new Button("Hapus");
         btnDel.getStyleClass().add("cool-button");
         btnDel.setOnAction(e -> {
-            Tugas selectTugas = tableView.getSelectionModel().getSelectedItem();
-            if (selectTugas != null) {
-                tableView.getItems().remove(selectTugas);
+            Tugas selectedTugas = tableView.getSelectionModel().getSelectedItem();
+            if (selectedTugas != null) {
+                stopTimer();
+                tableView.getItems().remove(selectedTugas);
             }
         });
-        
-        
+
         HBox hBox2 = new HBox();
         hBox2.setSpacing(10);
         hBox2.setAlignment(Pos.CENTER_LEFT);
         hBox2.getChildren().addAll(btnAdd, spacer, btnDel);
-        
 
         root.getChildren().addAll(topBox, tableView, hbox, hBox2);
         root.setSpacing(10);
@@ -113,6 +114,21 @@ public class MainScene extends Main {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void showAlert(String string) {
+    }
+
+    private int parseTimerString(String timerString) {
+        try {
+            String[] parts = timerString.split("\\.");
+            int hours = Integer.parseInt(parts[0]);
+            int minutes = Integer.parseInt(parts[1]);
+            int seconds = Integer.parseInt(parts[2]);
+            return hours * 3600 + minutes * 60 + seconds;
+        } catch (Exception e) {
+            return -1; // Invalid format
+        }
     }
 
     private HBox generateTopBox() {
@@ -150,21 +166,14 @@ public class MainScene extends Main {
         column1.setStyle("-fx-alignment: CENTER;");
         column2.setStyle("-fx-alignment: CENTER;");
 
-
         column1.setResizable(true);
         column2.setResizable(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-
 
         return tableView;
     }
 
     private ObservableList<Tugas> getDummyData() {
-        return FXCollections.observableArrayList();
-    }
-    
-    private ObservableList<Tugas> getNewDummyData() {
         return FXCollections.observableArrayList();
     }
 
@@ -192,7 +201,7 @@ public class MainScene extends Main {
                 tugas.decrementTimer();
             } else {
                 if (!tugas.isNotificationShown()) {
-                    showNotification(tugas.getNamaTugas() + " kerja tugas mu sekarang"); // Menampilkan notifikasi setelah timer berakhir
+                    showNotification(tugas.getNamaTugas() + " kerja tugas mu sekarang !!!"); // Menampilkan notifikasi setelah timer berakhir
                     tugas.setNotificationShown(true);
                 }
                 stopTimer();
@@ -206,7 +215,7 @@ public class MainScene extends Main {
         delay.setOnFinished(event -> {
             timeline.stop();
             if (!tugas.isNotificationShown()) {
-                showNotification(userName + " waktunya kerja " + tugas.getNamaTugas() + " mu sekarang"); // Menampilkan notifikasi setelah timer berakhir
+                showNotification(userName + " waktunya kerja " + tugas.getNamaTugas() + " mu sekarang !!!"); // Menampilkan notifikasi setelah timer berakhir
 
                 tugas.setNotificationShown(true);
             }
@@ -214,6 +223,7 @@ public class MainScene extends Main {
         });
         delay.play();
     }
+
 
     private void stopTimer() {
         if (timeline != null) {
@@ -229,22 +239,21 @@ public class MainScene extends Main {
         alert.setTitle("Notifikasi");
         alert.setHeaderText(null);
         alert.setContentText(message);
-        alert.setOnCloseRequest(v->{
+        alert.setOnCloseRequest(v -> {
             this.mp.stop();
         });
 
         DialogPane dialogPane = alert.getDialogPane();
 
-    // Membuat ImageView dengan gambar yang ingin ditampilkan
-    ImageView imageView = new ImageView(new Image("image/b.gif"));
-    suara();
-    imageView.setFitWidth(50); // Mengatur lebar gambar
-    imageView.setPreserveRatio(true); // Mempertahankan rasio aspek gambar
+        // Membuat ImageView dengan gambar yang ingin ditampilkan
+        ImageView imageView = new ImageView(new Image("image/b.gif"));
+        suara();
+        imageView.setFitWidth(50); // Mengatur lebar gambar
+        imageView.setPreserveRatio(true); // Mempertahankan rasio aspek gambar
 
-    // Menambahkan ImageView ke DialogPane
-    dialogPane.setGraphic(imageView);
-    
-        alert.show();  
+        // Menambahkan ImageView ke DialogPane
+        dialogPane.setGraphic(imageView);
 
+        alert.show();
     }
 }

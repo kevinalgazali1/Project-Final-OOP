@@ -7,7 +7,7 @@ public class Tugas {
     private int timer;
     private SimpleStringProperty timerString;
 
-    public Tugas(String namaTugas, int timer) {
+    public Tugas(String namaTugas, int timer, String timerString2) {
         this.namaTugas = namaTugas;
         this.timer = timer;
         this.timerString = new SimpleStringProperty(formatTimer(timer));
