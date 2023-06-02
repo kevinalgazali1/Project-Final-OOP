@@ -1,11 +1,14 @@
 package focusflow.Scenes;
 
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -60,15 +63,22 @@ public class HomeScene extends Home {
         label1.setWrapText(true);
         label1.setMaxWidth(355);
 
-        Label label2 = new Label("UserName : ");
+        Label label2 = new Label("User Name : ");
         label2.getStyleClass().add("label");
 
 
         TextField input1 = new TextField();
         input1.setPromptText("Username");
 
-        Button bt1 = new Button("Masuk");
+        Image img = new Image("image/mulai.png");
+        ImageView view = new ImageView(img);
+        view.setFitHeight(20);
+        view.setPreserveRatio(true);
+
+        Button bt1 = new Button("ENTER");
         bt1.getStyleClass().add("cool-button");
+        bt1.setCursor(Cursor.HAND);
+        bt1.setGraphic(view);
 
         
         HBox gp1 = new HBox(label2, input1);
