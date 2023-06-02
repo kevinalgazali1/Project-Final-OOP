@@ -14,12 +14,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import focusflow.Abstract.Home;
 
-public class HomeScene {
-    private Stage primaryStage;
+public class HomeScene extends Home {
 
-    public HomeScene(Stage primaryStage){
-        this.primaryStage = primaryStage;
+    public HomeScene(Stage primaryStage) {
+        super(primaryStage);
     }
 
     public void show() {
@@ -37,7 +37,7 @@ public class HomeScene {
         tLeft.getStyleClass().add("text-left");
         tRight.getStyleClass().add("text-right");
         TextFlow tTitle = new TextFlow();
-        tTitle.getChildren().addAll(tLeft,  new Text("     "), tRight);
+        tTitle.getChildren().addAll(tLeft, new Text("     "), tRight);
 
 
 

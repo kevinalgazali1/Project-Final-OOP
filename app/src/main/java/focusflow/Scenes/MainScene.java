@@ -30,11 +30,10 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import focusflow.Abstract.Main;
 import focusflow.Model.Tugas;
 
-public class MainScene {
-    private Stage primaryStage;
-    private String userName;
+public class MainScene extends Main {
     private Timeline timeline;
     private PauseTransition delay;
     private Queue<Tugas> taskQueue = new LinkedList<>();
@@ -46,8 +45,7 @@ public class MainScene {
 
 
     public MainScene(Stage primaryStage, String userName) {
-        this.primaryStage = primaryStage;
-        this.userName = userName;
+        super(primaryStage, userName);
         this.path = "sounds/a.mp3";
         this.media = new Media(new File(path).toURI().toString());
         this.mp= new MediaPlayer(media);
@@ -194,7 +192,7 @@ public class MainScene {
                 tugas.decrementTimer();
             } else {
                 if (!tugas.isNotificationShown()) {
-                    showNotification(tugas.getNamaTugas() + " kerja tugas mu memek"); // Menampilkan notifikasi setelah timer berakhir
+                    showNotification(tugas.getNamaTugas() + " kerja tugas mu sekarang"); // Menampilkan notifikasi setelah timer berakhir
                     tugas.setNotificationShown(true);
                 }
                 stopTimer();
@@ -208,7 +206,7 @@ public class MainScene {
         delay.setOnFinished(event -> {
             timeline.stop();
             if (!tugas.isNotificationShown()) {
-                showNotification(userName + " waktunya kerja " + tugas.getNamaTugas() + " mu tolol"); // Menampilkan notifikasi setelah timer berakhir
+                showNotification(userName + " waktunya kerja " + tugas.getNamaTugas() + " mu sekarang"); // Menampilkan notifikasi setelah timer berakhir
 
                 tugas.setNotificationShown(true);
             }
