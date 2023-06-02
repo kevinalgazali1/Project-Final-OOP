@@ -1,5 +1,6 @@
 package focusflow.Scenes;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -9,6 +10,7 @@ import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -21,7 +23,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import focusflow.Model.Tugas;
@@ -32,11 +38,19 @@ public class MainScene {
     private Timeline timeline;
     private PauseTransition delay;
     private Queue<Tugas> taskQueue = new LinkedList<>();
+    private String path;
+    private Media media;
+    private MediaPlayer mp;
+    private TableView<Tugas> tableView;
+    private ObservableList<Tugas> tugas;
 
 
     public MainScene(Stage primaryStage, String userName) {
         this.primaryStage = primaryStage;
         this.userName = userName;
+        this.path = "sounds/a.mp3";
+        this.media = new Media(new File(path).toURI().toString());
+        this.mp= new MediaPlayer(media);
 
     }
 
@@ -45,10 +59,13 @@ public class MainScene {
         VBox root = new VBox();
         Scene scene = new Scene(root, 640, 480);
         scene.getStylesheets().add(getClass().getResource("/CSS/MainStyle.css").toExternalForm());
+        
+        scene.getRoot().setStyle("-fx-background-color: #c0c0c0;");
 
         HBox topBox = generateTopBox();
 
         TableView<Tugas> tableView = generateTableView();
+        tableView.setStyle("-fx-font-size: 14px;");
         
 
         TextField input1 = new TextField();
@@ -56,10 +73,12 @@ public class MainScene {
         TextField input2 = new TextField();
         input2.setPromptText("Timer");
         HBox hbox = new HBox(input1, input2);
+        hbox.setSpacing(10);
+        hbox.setAlignment(Pos.CENTER);
         
-
-
+        
         Button btnAdd = new Button("Tambah");
+        btnAdd.getStyleClass().add("cool-button");
         btnAdd.setOnAction(v -> {
             Tugas newTugas = new Tugas(input1.getText(), Integer.parseInt(input2.getText()));
             tableView.getItems().add(newTugas);
@@ -71,9 +90,26 @@ public class MainScene {
             taskQueue.add(newTugas);
         });
 
-       
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        root.getChildren().addAll(topBox, tableView, hbox, btnAdd);
+        Button btnDel = new Button("Hapus");
+        btnDel.getStyleClass().add("cool-button");
+        btnDel.setOnAction(e -> {
+            Tugas selectTugas = tableView.getSelectionModel().getSelectedItem();
+            if (selectTugas != null) {
+                tableView.getItems().remove(selectTugas);
+            }
+        });
+        
+        
+        HBox hBox2 = new HBox();
+        hBox2.setSpacing(10);
+        hBox2.setAlignment(Pos.CENTER_LEFT);
+        hBox2.getChildren().addAll(btnAdd, spacer, btnDel);
+        
+
+        root.getChildren().addAll(topBox, tableView, hbox, hBox2);
         root.setSpacing(10);
         root.setPadding(new Insets(10));
 
@@ -83,9 +119,10 @@ public class MainScene {
 
     private HBox generateTopBox() {
         HBox topBox = new HBox();
-        topBox.setSpacing(225);
+        topBox.setSpacing(200);
 
         Button backButton = new Button("Back");
+        backButton.getStyleClass().add("cool-button");
         backButton.setOnAction(event -> {
             HomeScene homeScene = new HomeScene(primaryStage);
             homeScene.show();
@@ -110,6 +147,12 @@ public class MainScene {
         tableView.getColumns().addAll(column1, column2);
         tableView.setItems(getDummyData());
 
+        tableView.setStyle("-fx-cell-size: 50px;");
+
+        column1.setStyle("-fx-alignment: CENTER;");
+        column2.setStyle("-fx-alignment: CENTER;");
+
+
         column1.setResizable(true);
         column2.setResizable(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -132,6 +175,10 @@ public class MainScene {
         if (nextTugas != null) {
             startTimer(nextTugas);
         }
+    }
+
+    private void suara() {
+        this.mp.play();
     }
 
     private void startTimer(Tugas tugas) {
@@ -161,7 +208,7 @@ public class MainScene {
         delay.setOnFinished(event -> {
             timeline.stop();
             if (!tugas.isNotificationShown()) {
-                showNotification(userName + " kerja tugas " + tugas.getNamaTugas() + "mu sekarang !!!"); // Menampilkan notifikasi setelah timer berakhir
+                showNotification(userName + " waktunya kerja " + tugas.getNamaTugas() + " mu tolol"); // Menampilkan notifikasi setelah timer berakhir
 
                 tugas.setNotificationShown(true);
             }
@@ -184,11 +231,15 @@ public class MainScene {
         alert.setTitle("Notifikasi");
         alert.setHeaderText(null);
         alert.setContentText(message);
+        alert.setOnCloseRequest(v->{
+            this.mp.stop();
+        });
 
         DialogPane dialogPane = alert.getDialogPane();
 
     // Membuat ImageView dengan gambar yang ingin ditampilkan
     ImageView imageView = new ImageView(new Image("image/b.gif"));
+    suara();
     imageView.setFitWidth(50); // Mengatur lebar gambar
     imageView.setPreserveRatio(true); // Mempertahankan rasio aspek gambar
 
