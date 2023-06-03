@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -45,12 +47,20 @@ public class MainScene extends Main {
         this.mp = new MediaPlayer(media);
     }
 
+    private void setRootBackground(VBox root) {
+        Image backgroundImage = new Image("image/bg2.png"); // Ganti dengan path gambar latar belakang yang diinginkan
+        BackgroundImage background = new BackgroundImage(backgroundImage, null, null, null, null);
+        root.setBackground(new Background(background));
+    }
+    
+
     public void show() {
         VBox root = new VBox();
+        setRootBackground(root);
         Scene scene = new Scene(root, 640, 480);
         scene.getStylesheets().add(getClass().getResource("/CSS/MainStyle.css").toExternalForm());
 
-        scene.getRoot().setStyle("-fx-background-color: #c0c0c0;");
+        // scene.getRoot().setStyle("-fx-background-color: #c0c0c0;");
 
         HBox topBox = generateTopBox();
 
@@ -77,7 +87,73 @@ public class MainScene extends Main {
 
         
         Button btnAdd = new Button("Add");
-        btnAdd.getStyleClass().add("cool-button");
+        btnAdd.setStyle(
+            "-fx-background-color: #4CAF50;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-font-size: 14px;" +
+            "-fx-pref-width: 100px;" +
+            "-fx-pref-height: 30px;" +
+            "-fx-background-radius: 15px;" +
+            "-fx-border-color: transparent;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 0, 0, 0, 1);"
+            );
+
+        btnAdd.setOnMouseEntered(e -> {
+            btnAdd.setStyle(
+            "-fx-background-color: #66BB6A;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-font-size: 14px;" +
+            "-fx-pref-width: 100px;" +
+            "-fx-pref-height: 30px;" +
+            "-fx-background-radius: 15px;" +
+            "-fx-border-color: transparent;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 0, 0, 0, 1);"
+            );
+        });
+
+        btnAdd.setOnMouseExited(e -> {
+            btnAdd.setStyle(
+            "-fx-background-color: #4CAF50;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-font-size: 14px;" +
+            "-fx-pref-width: 100px;" +
+            "-fx-pref-height: 30px;" +
+            "-fx-background-radius: 15px;" +
+            "-fx-border-color: transparent;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 0, 0, 0, 1);"
+            );
+        });
+
+        btnAdd.setOnMousePressed(e -> {
+            btnAdd.setStyle(
+            "-fx-background-color: #388E3C;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-font-size: 14px;" +
+            "-fx-pref-width: 100px;" +
+            "-fx-pref-height: 30px;" +
+            "-fx-background-radius: 15px;" +
+            "-fx-border-color: transparent;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 0, 0, 0, 1);"
+            );
+        });
+
+        btnAdd.setOnMouseReleased(e -> {
+            btnAdd.setStyle(
+            "-fx-background-color: #66BB6A;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-font-size: 14px;" +
+            "-fx-pref-width: 100px;" +
+            "-fx-pref-height: 30px;" +
+            "-fx-background-radius: 15px;" +
+            "-fx-border-color: transparent;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 0, 0, 0, 1);"
+            );
+        });
         btnAdd.setCursor(Cursor.HAND);
         btnAdd.setGraphic(view1);
         btnAdd.setOnAction(v -> {
@@ -102,7 +178,74 @@ public class MainScene extends Main {
         HBox.setHgrow(spacer, Priority.ALWAYS);
         
         Button btnDel = new Button("Delete");
-        btnDel.getStyleClass().add("cool-button1");
+        btnDel.setStyle(
+            "-fx-background-color: #F44336;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-font-size: 14px;" +
+            "-fx-pref-width: 100px;" +
+            "-fx-pref-height: 30px;" +
+            "-fx-background-radius: 15px;" +
+            "-fx-border-color: transparent;" +
+            "-fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );"
+            );
+
+        btnDel.setOnMouseEntered(e -> {
+            btnDel.setStyle(
+            "-fx-background-color: #E53935;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-font-size: 14px;" +
+            "-fx-pref-width: 100px;" +
+            "-fx-pref-height: 30px;" +
+            "-fx-background-radius: 15px;" +
+            "-fx-border-color: transparent;" +
+            "-fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );"
+            );
+        });
+
+        btnDel.setOnMouseExited(e -> {
+            btnDel.setStyle(
+            "-fx-background-color: #F44336;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-font-size: 14px;" +
+            "-fx-pref-width: 100px;" +
+            "-fx-pref-height: 30px;" +
+            "-fx-background-radius: 15px;" +
+            "-fx-border-color: transparent;" +
+            "-fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );"
+            );
+        });
+
+        btnDel.setOnMousePressed(e -> {
+            btnDel.setStyle(
+            "-fx-background-color: #D32F2F;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-font-size: 14px;" +
+            "-fx-pref-width: 100px;" +
+            "-fx-pref-height: 30px;" +
+            "-fx-background-radius: 15px;" +
+            "-fx-border-color: transparent;" +
+            "-fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );"
+            );
+        });
+
+        btnDel.setOnMouseReleased(e -> {
+            btnDel.setStyle(
+            "-fx-background-color: #E53935;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-font-size: 14px;" +
+            "-fx-pref-width: 100px;" +
+            "-fx-pref-height: 30px;" +
+            "-fx-background-radius: 15px;" +
+            "-fx-border-color: transparent;" +
+            "-fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );"
+            );
+        });
+
         btnDel.setCursor(Cursor.HAND);
         btnDel.setGraphic(view2);
         btnDel.setOnAction(e -> {
@@ -151,7 +294,74 @@ public class MainScene extends Main {
         view3.setPreserveRatio(true);
 
         Button backButton = new Button("Back");
-        backButton.getStyleClass().add("cool-button2");
+        backButton.setStyle(
+            "-fx-background-color: #808080;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-font-size: 14px;" +
+            "-fx-pref-width: 100px;" +
+            "-fx-pref-height: 30px;" +
+            "-fx-background-radius: 15px;" +
+            "-fx-border-color: transparent;" +
+            "-fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );"
+            );
+    
+            backButton.setOnMouseEntered(e -> {
+                backButton.setStyle(
+                "-fx-background-color: #A9A9A9;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-font-size: 14px;" +
+                "-fx-pref-width: 100px;" +
+                "-fx-pref-height: 30px;" +
+                "-fx-background-radius: 15px;" +
+                "-fx-border-color: transparent;" +
+                "-fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );"
+                );
+            });
+    
+            backButton.setOnMouseExited(e -> {
+                backButton.setStyle(
+                "-fx-background-color: #808080;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-font-size: 14px;" +
+                "-fx-pref-width: 100px;" +
+                "-fx-pref-height: 30px;" +
+                "-fx-background-radius: 15px;" +
+                "-fx-border-color: transparent;" +
+                "-fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );"
+                );
+            });
+    
+            backButton.setOnMousePressed(e -> {
+                backButton.setStyle(
+                "-fx-background-color: #696969;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-font-size: 14px;" +
+                "-fx-pref-width: 100px;" +
+                "-fx-pref-height: 30px;" +
+                "-fx-background-radius: 15px;" +
+                "-fx-border-color: transparent;" +
+                "-fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );"
+                );
+            });
+    
+            backButton.setOnMouseReleased(e -> {
+                 backButton.setStyle(
+                "-fx-background-color: #A9A9A9;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-font-size: 14px;" +
+                "-fx-pref-width: 100px;" +
+                "-fx-pref-height: 30px;" +
+                "-fx-background-radius: 15px;" +
+                "-fx-border-color: transparent;" +
+                "-fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );"
+                );
+            });
+
         backButton.setCursor(Cursor.HAND);
         backButton.setGraphic(view3);
         backButton.setOnAction(event -> {
@@ -160,7 +370,7 @@ public class MainScene extends Main {
         });
 
         Label titleLabel = new Label("Data Tugas");
-        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
 
         topBox.getChildren().addAll(backButton, titleLabel);
         return topBox;
@@ -233,9 +443,9 @@ public class MainScene extends Main {
             timeline.stop();
             if (!tugas.isNotificationShown()) {
                 showNotification(userName + " waktunya kerja " + tugas.getNamaTugas() + " mu sekarang"); // Menampilkan notifikasi setelah timer berakhir
-
                 tugas.setNotificationShown(true);
             }
+            
             showNextNotification();
         });
         delay.play();
